@@ -3,6 +3,7 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osuTK.Graphics;
+using Qsor.Game.Online.Users.Drawables;
 using Qsor.Game.Overlays;
 
 namespace Qsor.Game.Screens.Menu
@@ -24,7 +25,7 @@ namespace Qsor.Game.Screens.Menu
                 Alpha = .4f
             });
             
-            AddInternal(new UserOverlay());
+            AddInternal(new DrawableUserStatistics());
         }
     }
 }
