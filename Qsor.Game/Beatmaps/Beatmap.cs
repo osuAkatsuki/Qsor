@@ -5,15 +5,21 @@ using System.IO;
 using System.Linq;
 using osu.Framework.Logging;
 using osu.Framework.Platform;
-using osuTK;
 using osuTK.Graphics;
 using Qsor.Game.Gameplay;
-using Qsor.Game.Gameplay.osu.HitObjects;
-using Qsor.Game.Gameplay.osu.HitObjects.Slider;
 using Component = osu.Framework.Graphics.Component;
 
 namespace Qsor.Game.Beatmaps
 {
+    [Flags]
+    public enum HitObjectType
+    {
+        Circle,
+        Slider   = 1 << 1,
+        NewCombo = 1 << 2,
+        Spinner  = 1 << 3
+    }
+    
     public class General {
         public string AudioFilename;
         public int AudioLeadIn;
@@ -101,6 +107,7 @@ namespace Qsor.Game.Beatmaps
                             var timing = int.Parse(hitObjectValue[2]);
                             var hitObjectType = Enum.Parse<HitObjectType>(hitObjectValue[3]);
                             
+                            /*
                             if ((hitObjectType & HitObjectType.NewCombo) != 0)
                             {
                                 hitObjectColorIndex++;
@@ -112,7 +119,9 @@ namespace Qsor.Game.Beatmaps
                                 
                                 hitObjectColor = Colors[hitObjectColorIndex];
                             }
+                            */
                             
+                            /*
                             if ((hitObjectType & HitObjectType.Circle) != 0)
                             {
                                 HitObject circle = new HitCircle(this, new Vector2((float) x, (float) y));
@@ -121,7 +130,9 @@ namespace Qsor.Game.Beatmaps
 
                                 HitObjects.Add(circle);
                             }
+                            */
                             
+                            /*
                             if ((hitObjectType & HitObjectType.Slider) != 0)
                             {
                                 var sliderInfo = hitObjectValue[5].Split("|");
@@ -155,17 +166,15 @@ namespace Qsor.Game.Beatmaps
                                 var pixelLength = double.Parse(hitObjectValue[7].Trim());
                                 var repeats = int.Parse(hitObjectValue[6].Trim());
 
-                                HitObject slider = new HitSlider(
-                                    this,
-                                    sliderType, curvePoints,
-                                    pixelLength, repeats);
+                                HitObject slider = new HitSlider();
 
-                                slider.BeginTime = timing;
-                                slider.TimingPoint = TimingPoints.FirstOrDefault(s => s.Offset >= timing);
-                                slider.HitObjectColour = hitObjectColor;
+                                //slider.BeginTime = timing;
+                                //slider.TimingPoint = TimingPoints.FirstOrDefault(s => s.Offset >= timing);
+                                //slider.HitObjectColour = hitObjectColor;
                                 
                                 HitObjects.Add(slider);
                             }
+                            */
                         }
                         break;
                     case Category.Difficulty:

@@ -16,7 +16,6 @@ using osuTK;
 using osuTK.Graphics;
 using Qsor.Game.Beatmaps;
 using Qsor.Game.Database;
-using Qsor.Game.Gameplay.osu.Screens;
 using Qsor.Game.Graphics.Containers;
 using Qsor.Game.Overlays;
 using Qsor.Game.Screens.Menu;
@@ -30,7 +29,7 @@ namespace Qsor.Game.Screens
         private Toolbar _toolbar;
         private BottomBar _bottomBar;
         
-        private Bindable<WorkingBeatmap> _workingBeatmap = new Bindable<WorkingBeatmap>();
+        private readonly Bindable<WorkingBeatmap> _workingBeatmap = new Bindable<WorkingBeatmap>();
         
         [Resolved]
         private NotificationOverlay NotificationOverlay { get; set; }
@@ -60,13 +59,12 @@ namespace Qsor.Game.Screens
             AddInternal(parallaxBack);
             
             
-            
-            
             var db = ctxFactory.Get();
             var beatmapModel = db.Beatmaps.ToList().OrderBy(r => Guid.NewGuid()).FirstOrDefault();
             var beatmapStorage = Storage.GetStorageForDirectory(beatmapModel?.Path);
             beatmapManager.LoadBeatmap(beatmapStorage, beatmapModel?.File);
-            LoadComponent(beatmapManager.WorkingBeatmap.Value);
+            
+            //LoadComponent(beatmapManager.WorkingBeatmap.Value);
             _workingBeatmap.BindTo(beatmapManager.WorkingBeatmap);
             
             _background.SetTexture(_workingBeatmap.Value.Background);
@@ -95,10 +93,8 @@ namespace Qsor.Game.Screens
             
             AddInternal(parallaxFront);
 
-            
-            
+
             AddInternal(_toolbar = new Toolbar());
-            
             AddInternal(_bottomBar = new BottomBar());
             
             AddInternal(updaterOverlay);
@@ -172,6 +168,7 @@ namespace Qsor.Game.Screens
 
         protected override bool OnClick(ClickEvent e)
         {
+            /*
             if (_qsorLogo.IsHovered)
                 ((QsorGame) Game).PushScreen(new OsuScreen
                 {
@@ -180,6 +177,7 @@ namespace Qsor.Game.Screens
                     Origin = Anchor.Centre,
                     FillMode = FillMode.Fill,
                 });
+            */
             
             return base.OnClick(e);
         }
