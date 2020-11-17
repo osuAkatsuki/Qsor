@@ -1,10 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Textures;
+using osu.Framework.Logging;
 using osuTK;
 using osuTK.Graphics;
 using Qsor.Game.Beatmaps;
@@ -15,7 +16,9 @@ namespace Qsor.Game.Gameplay.osu.HitObjects
     // TODO: Fully Implement.
     public class HitSlider : HitObject, IHasCurve
     {
-        public override double EndTime => BeginTime + this.SpanCount() * Path.Distance / TimingPoint.Velocity;
+        public override double EndTime => BeginTime +
+                                          (TimingPoint.MsPerBeat*RepeatCount*TimingPoint.SpeedMultiplier*_pixelLength /
+                                           (100 * Beatmap.Difficulty.SliderMultiplier));
         public IReadOnlyList<Vector2> ControlPoints { get; }
         public PathType PathType { get; }
         public override HitObjectType Type => HitObjectType.Slider;
@@ -26,7 +29,8 @@ namespace Qsor.Game.Gameplay.osu.HitObjects
         public SnakingSliderBody Body { get; private set; }
         public SliderBall Ball { get; private set; }
 
-        private Vector2? _lastPosition = null;
+        private double _pixelLength;
+        private Vector2? _lastPosition;
         
         [BackgroundDependencyLoader]
         private void Load(TextureStore store) {
@@ -60,6 +64,8 @@ namespace Qsor.Game.Gameplay.osu.HitObjects
             Body.UpdateProgress(0);
             Ball.Position = this.CurvePositionAt(0);
             Ball.Scale = new Vector2(Body.PathRadius / 64f);
+            
+            Logger.LogPrint($"B:{BeginTime} E:{EndTime}");
 
             BindableProgress.ValueChanged += prog =>
             {
@@ -85,7 +91,7 @@ namespace Qsor.Game.Gameplay.osu.HitObjects
         {
             if (_isFading)
                 return;
-            
+
             this.FadeInFromZero(200 + Beatmap.Difficulty.ApproachRate);
             SliderBeginCircle.Show();
         }
@@ -105,6 +111,7 @@ namespace Qsor.Game.Gameplay.osu.HitObjects
         public HitSlider(Beatmap beatmap, PathType pathType, IReadOnlyList<Vector2> controlPoints,
                 double pixelLength, int repeats) : base(beatmap, controlPoints[0])
         {
+            _pixelLength = pixelLength;
             Path = new SliderPath(pathType, controlPoints.ToArray(), pixelLength);
             PathType = pathType;
             ControlPoints = controlPoints;

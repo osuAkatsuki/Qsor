@@ -201,12 +201,13 @@ namespace Qsor.Game.Beatmaps
                             };
                             timingPoint.BPM = 60000d / Math.Clamp(timingPoint.MsPerBeat, 6, 60000);
 
+                            timingPoint.SpeedMultiplier = 1;
                             if (timingPoint.Inherited)
                                 timingPoint.SpeedMultiplier = -100 * lastBpm / timingPoint.MsPerBeat;
-                            else
-                                lastBpm = timingPoint.SpeedMultiplier = timingPoint.BPM;
+                            else 
+                                lastBpm = timingPoint.BPM;
                             
-                            timingPoint.Velocity = Difficulty.SliderMultiplier * timingPoint.SpeedMultiplier / 600f;
+                            timingPoint.Velocity = 100000d * timingPoint.SpeedMultiplier / timingPoint.MsPerBeat;
                             
                             TimingPoints.Add(timingPoint);
                         }
